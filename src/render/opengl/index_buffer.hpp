@@ -6,8 +6,8 @@ class IndexBuffer
 {
 
   public:
-    IndexBuffer(const unsigned* data, unsigned count);
-    ~IndexBuffer();
+    IndexBuffer(const unsigned short* data, unsigned count);
+    void delete_buffer();
     IndexBuffer() = default;
 
     void bind() const;

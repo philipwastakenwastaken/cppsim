@@ -21,6 +21,13 @@ void VertexArray::add_buffer(const VertexBuffer& vb, const VertexBufferLayout& l
     }
 }
 
+
+void VertexArray::delete_buffer()
+{
+    glDeleteBuffers(1, &render_id);
+}
+
+
 void VertexArray::bind() const { glBindVertexArray(render_id); }
 
 void VertexArray::unbind() const { glBindVertexArray(0); }

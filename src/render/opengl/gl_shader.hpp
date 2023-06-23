@@ -23,9 +23,8 @@ class Shader
 
   public:
     explicit Shader(std::string path) : file_path(std::move(path)), render_id(create_shader()) {}
-    //Shader() = default;
-
-    ~Shader();
+    Shader() = default;
+    ~Shader() = default;
 
 
     void bind() const;

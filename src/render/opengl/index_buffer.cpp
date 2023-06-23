@@ -5,14 +5,14 @@
 namespace cppsim {
 
 
-IndexBuffer::IndexBuffer(const unsigned* data, unsigned count) : count(count)
+IndexBuffer::IndexBuffer(const unsigned short* data, unsigned count) : count(count)
 {
     glGenBuffers(1, &render_id); // gen vertex buffer id
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, render_id); // bind the newly generated id
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(unsigned), data, GL_STATIC_DRAW); // load data into buffer
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(unsigned short), data, GL_STATIC_DRAW); // load data into buffer
 }
 
-IndexBuffer::~IndexBuffer()
+void IndexBuffer::delete_buffer()
 {
     glDeleteBuffers(1, &render_id);
 }

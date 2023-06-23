@@ -16,6 +16,7 @@ class VertexBuffer
 
     void bind() const;
     void unbind() const;
+    void delete_buffer();
 
     [[nodiscard]] unsigned get_render_id() const { return render_id; }
     [[nodiscard]] unsigned get_count() const { return count; }

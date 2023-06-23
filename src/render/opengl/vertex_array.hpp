@@ -14,11 +14,10 @@ namespace cppsim {
             glGenVertexArrays(1, &render_id);
         }
 
-        ~VertexArray() {
-            glDeleteVertexArrays(1, &render_id);
-        }
+        ~VertexArray() = default;
 
         void add_buffer(const VertexBuffer& vb, const VertexBufferLayout& layout) const;
+        void delete_buffer();
 
         void bind() const;
         void unbind() const;

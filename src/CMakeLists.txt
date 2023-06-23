@@ -10,7 +10,12 @@ add_library(cppsimlib STATIC render/window.cpp
                            render/opengl/vertex_buffer.cpp
                            render/opengl/vertex_buffer_layout.cpp
                            render/opengl/vertex_array.cpp
+                           render/opengl/texture.cpp
+                           render/opengl/mesh.cpp
+                           render/opengl/draw_call.cpp
                            render/opengl/index_buffer.cpp
+                           render/asset/model_loader.cpp
+                           render/asset/texture_loader.cpp
                            render/camera/camera.cpp
                            render/camera/camera_controller.cpp
                            render/scene/transform.cpp
@@ -30,6 +35,7 @@ target_link_libraries(cppsimlib PUBLIC
                               glfw
                               glad
                               glm
+                              stb
                               spdlog::spdlog)
 
 # Prefer pthreads on Unix.

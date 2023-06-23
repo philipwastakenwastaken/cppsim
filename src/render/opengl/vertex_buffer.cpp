@@ -13,6 +13,11 @@ VertexBuffer::VertexBuffer(const void* data, unsigned count, unsigned type_size)
     glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(count) * type_size, data, GL_STATIC_DRAW); // load data into buffer
 }
 
+void VertexBuffer::delete_buffer()
+{
+    glDeleteBuffers(1, &render_id);
+}
+
 void VertexBuffer::bind() const
 {
     glBindBuffer(GL_ARRAY_BUFFER, render_id); // for rebinding VBO

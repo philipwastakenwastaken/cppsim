@@ -9,7 +9,6 @@
 namespace cppsim {
 
 
-Shader::~Shader() { glDeleteProgram(render_id); }
 
 void Shader::bind() const { glUseProgram(render_id); }
 
@@ -97,6 +96,9 @@ ShaderProgramSource Shader::parse_shader()
     ShaderType type = ShaderType::NONE;
     while (getline(stream, line))
     {
+        if (line.find("//") != std::string::npos)
+            continue;
+
         if (line.find("#shader") != std::string::npos)
         {
             if (line.find("vertex") != std::string::npos)

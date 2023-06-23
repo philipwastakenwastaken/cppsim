@@ -21,7 +21,7 @@ class Texture
 
   private:
     u32 tex_id;
-}
+};
 
 
 } // namespace cppsim
