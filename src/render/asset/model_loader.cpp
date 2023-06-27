@@ -99,21 +99,6 @@ std::vector<float> ModelLoader::interleave_data()
         }
     }
 
-    for (u32 i = 0; i < data.size(); i += vertex_elements)
-    {
-        for (u32 j = 0; j < vertex_elements; j++)
-        {
-            std::cout << data[i + j] << " ";
-        }
-        std::cout << '\n';
-    }
-
-    for (u32 i = 0; i < indices.size(); i += 1)
-    {
-            std::cout << indices[i] << " ";
-    }
-        std::cout << '\n';
-
     vertex_indices = indices;
     return data;
 }
@@ -216,7 +201,6 @@ void ModelLoader::load_mtl()
                     face.position_indices[i] = i1 - 1;
                     face.normal_indices[i] = i2 - 1;
 
-                    CPPSIM_TRACE("{0} {1}", i1, i2);
                 }
                 mesh_faces.push_back(face);
             }
@@ -234,7 +218,6 @@ void ModelLoader::load_mtl()
                     face.tex_indices[i] = i2 - 1;
                     face.normal_indices[i] = i3 - 1;
 
-                    CPPSIM_TRACE("{0} {1} {2}", i1, i2, i3);
                 }
             }
             else {
@@ -243,7 +226,6 @@ void ModelLoader::load_mtl()
                 {
                     ss >> i1;
                     face.position_indices[i] = i1 - 1;
-                    CPPSIM_TRACE("{0}", i1);
                 }
 
             }

@@ -1,5 +1,14 @@
 #pragma once
 #include <cstdlib>
+#include <string>
+
+constexpr const char* WindowTitle = "cppsim";
+constexpr int WindowWidth = 1280;
+constexpr int WindowHeight = 720;
+
+
+constexpr int GLContextVersionMajor = 4;
+constexpr int GLContextVersionMinor = 1;
 
 // Controls parameters related to building in different modes
 

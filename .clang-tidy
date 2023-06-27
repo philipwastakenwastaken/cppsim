@@ -18,6 +18,7 @@ Checks:          '*,-fuchsia-*,-google-*,-zircon-*,-abseil-*,-modernize-use-trai
                   -llvmlibc-implementation-in-namespace,
                   -altera-unroll-loops,
                   -misc-no-recursion,
+                  -cppcoreguidelines-prefer-member-initializer,
                   -cert-err58-cpp,
                   -cert-msc51-cpp,
                   -readability-convert-member-functions-to-static,

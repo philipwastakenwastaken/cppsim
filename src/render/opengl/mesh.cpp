@@ -6,7 +6,7 @@ namespace cppsim {
 
 void Mesh::draw() const
 {
-    shader.bind();
+    shader->bind();
     texture.bind();
     vao.bind();
 

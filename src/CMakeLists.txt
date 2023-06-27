@@ -12,8 +12,12 @@ add_library(cppsimlib STATIC render/window.cpp
                            render/opengl/vertex_array.cpp
                            render/opengl/texture.cpp
                            render/opengl/mesh.cpp
+                           render/opengl/device.cpp
                            render/opengl/draw_call.cpp
                            render/opengl/index_buffer.cpp
+                           render/renderer/renderer.cpp
+                           render/renderer/render_pass.cpp
+                           render/renderer/forward_pass.cpp
                            render/asset/model_loader.cpp
                            render/asset/texture_loader.cpp
                            render/camera/camera.cpp
@@ -21,6 +25,7 @@ add_library(cppsimlib STATIC render/window.cpp
                            render/scene/transform.cpp
                            render/scene/scene_camera.cpp
                            render/opengl/gl_shader.cpp
+                           application.cpp
                            util/timer.cpp
                            util/rng.cpp
                            core/log.cpp)

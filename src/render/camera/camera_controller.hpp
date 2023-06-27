@@ -13,6 +13,7 @@ class Window;
 class CameraController {
 
     public:
+        CameraController() = default;
         explicit CameraController(std::shared_ptr<SceneCamera> c);
 
 

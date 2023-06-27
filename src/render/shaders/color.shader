@@ -1,6 +1,8 @@
 #shader vertex
 #version 330 core
 layout(location = 0) in vec3 a_pos;
+layout(location = 1) in vec2 a_tex_coord;
+layout(location = 2) in vec3 a_normal;
 uniform mat4 model;
 
 out vec3 color;

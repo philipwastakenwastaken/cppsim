@@ -1,3 +1,4 @@
+#define STB_IMAGE_IMPLEMENTATION
 #include "render/asset/texture_loader.hpp"
 #include "stb/stb_image.h"
 

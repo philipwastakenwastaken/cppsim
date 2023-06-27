@@ -12,7 +12,7 @@ class Texture
 
   public:
     Texture();
-    ~Texture();
+    ~Texture() = default;
 
     void bind() const;
 

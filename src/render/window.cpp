@@ -11,40 +11,19 @@
 
 namespace cppsim {
 
-Window::Window()
+Window::Window(i32 w, i32 h): width(w), height(h)
 {
-    auto glfw_result = glfwInit();
-    CPPSIM_ASSERT(glfw_result, "Could not initialize GLFW");
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, GLContextVersionMajor);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, GLContextVersionMinor);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 #ifdef CPPSIM_PLATFORM_MACOSX
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
-
-
-    window = glfwCreateWindow(window_width, window_height, "cppsim", nullptr, nullptr);
-
+    window = glfwCreateWindow(w, h, WindowTitle, nullptr, nullptr);
     CPPSIM_ASSERT(window, "Could not initialize GLFW window");
-
-    glfwMakeContextCurrent(window);
-    glfwSwapInterval(1);
-
-    auto gl_version = gladLoadGL(glfwGetProcAddress);
-    CPPSIM_ASSERT(gl_version, "Could not initalize glad");
-    CPPSIM_TRACE("Loaded OpenGL version {0}.{1}", GLAD_VERSION_MAJOR(gl_version), GLAD_VERSION_MINOR(gl_version));
-
-
-    int h = 0;
-    int w = 0;
-    glfwGetFramebufferSize(window, &w, &h);
-    CPPSIM_TRACE("w: {0} h {1}", w, h);
-    glViewport(0, 0, w, h);
 }
-
-Window::~Window() { glfwDestroyWindow(window); }
 
 
 glm::vec2 Window::mouse_position(bool normalized) const
@@ -57,8 +36,8 @@ glm::vec2 Window::mouse_position(bool normalized) const
 
     if (normalized)
     {
-        ret.x = ret.x / window_width * 2.0f - 1.0f;
-        ret.y = ret.y / window_height * 2.0f - 1.0f;
+        ret.x = ret.x / width * 2.0f - 1.0f;
+        ret.y = ret.y / height * 2.0f - 1.0f;
     }
 
     return ret;
@@ -69,7 +48,7 @@ Window::PressedState Window::key_state(int key_code) const
     return static_cast<PressedState>(glfwGetKey(window, key_code));
 }
 
-float Window::aspect_ratio() const { return window_width / static_cast<float>(window_height); }
+float Window::aspect_ratio() const { return width / static_cast<float>(height); }
 
 
 void Window::set_mouse_visible(bool visible)

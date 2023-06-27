@@ -13,9 +13,10 @@ namespace cppsim {
 class Window
 {
   public:
-    Window();
-    ~Window();
+    Window() = default;
+    Window(i32 w, i32 h);
 
+    inline void terminate() { glfwDestroyWindow(window); }
     void swap_buffers() { glfwSwapBuffers(window); }
     void poll_events() { glfwPollEvents(); }
     [[nodiscard]] bool should_close() const { return glfwWindowShouldClose(window); }
@@ -38,17 +39,19 @@ class Window
     [[nodiscard]] bool is_key_released(int key_code) const { return key_state(key_code) == PressedState::Released; }
     [[nodiscard]] bool is_key_repeated(int key_code) const { return key_state(key_code) == PressedState::Repeated; }
 
+    // Window pixel coordinates or NDC
     [[nodiscard]] glm::vec2 mouse_position(bool normalized) const;
 
+    [[nodiscard]] inline GLFWwindow* internal_window() { return window; }
+
   private:
+
     // Get the pressed state of a key
-
-
     [[nodiscard]] PressedState key_state(int key_code) const;
     GLFWwindow* window = nullptr;
 
-    i32 window_width = 500;
-    i32 window_height = 500;
+    i32 width;
+    i32 height;
 };
 
 } // namespace cppsim

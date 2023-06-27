@@ -29,7 +29,7 @@ class DrawCall
 
     enum class PolygonMode : GLenum {
         Fill = GL_FILL,
-        Lines = GL_LINES
+        Lines = GL_LINE
 
     };
 

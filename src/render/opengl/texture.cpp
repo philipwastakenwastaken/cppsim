@@ -9,8 +9,6 @@ namespace cppsim {
 
 Texture::Texture() { glGenTextures(1, &tex_id); }
 
-Texture::~Texture() { glDeleteTextures(1, &tex_id); }
-
 void Texture::bind() const { glBindTexture(GL_TEXTURE_2D, tex_id); }
 
 
