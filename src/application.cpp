@@ -3,13 +3,18 @@
 #include "render/asset/model_loader.hpp"
 #include "render/asset/texture_loader.hpp"
 #include "render/camera/camera.hpp"
+#include "render/lightning/point_light.hpp"
 #include "render/opengl/device.hpp"
 #include "render/renderer/forward_pass.hpp"
 #include "render/scene/scene_model.hpp"
 #include "render/scene/transform.hpp"
+#include "render/shaders/shader_updates.hpp"
+
 #include "util/timer.hpp"
+
 #include <memory>
 #include <type_traits>
+#include <functional>
 
 namespace cppsim {
 
@@ -24,11 +29,30 @@ Application::Application()
 
 void Application::init_scene()
 {
+
+    std::shared_ptr<Camera> camera = std::make_shared<Camera>();
+    camera->set_view_matrix(glm::vec3(-1.0f, 0.5f, -2.0f), glm::vec3(0));
+    camera->set_perspective_projection(glm::radians(45.0f), window->aspect_ratio(), 0.1f, 100.0f);
+    std::shared_ptr<SceneCamera> scene_camera = std::make_shared<SceneCamera>("cam 1", camera);
+    cam_controller = CameraController(scene_camera);
+    scene = std::make_unique<Scene>(scene_camera);
+
+    renderer = make_unique<Renderer>(scene->get_scene_graph(), scene->get_scene_camera()->get_camera());
+
     const char* cube_shader_path = "/Users/philiptoftenielsen/dev/cppsim/src/render/shaders/color.shader";
     const char* plane_shader_path = "/Users/philiptoftenielsen/dev/cppsim/src/render/shaders/texture.shader";
 
     auto cube_shader = std::make_shared<Shader>(cube_shader_path);
     auto plane_shader = std::make_shared<Shader>(plane_shader_path);
+
+
+    UpdateTransformFunction f1 = std::bind(projection_model_view_transform, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+    renderer->add_update_transform_function(cube_shader, f1);
+    renderer->add_update_transform_function(plane_shader, f1);
+
+    UpdateLightFunction f2 = std::bind(point_light_update, std::placeholders::_1, std::placeholders::_2);
+    renderer->add_update_light_function(cube_shader, f2);
+
 
     ModelLoader loader("/Users/philiptoftenielsen/dev/cppsim/model/plane.obj");
     auto plane_mesh = loader.to_mesh();
@@ -43,33 +67,40 @@ void Application::init_scene()
     auto plane_model = std::make_shared<SceneModel>("plane", plane_trans, plane_mesh);
 
 
-    ModelLoader cube_loader("/Users/philiptoftenielsen/dev/cppsim/model/monkey.obj");
+    ModelLoader monkey_loader("/Users/philiptoftenielsen/dev/cppsim/model/suzanne.obj");
+    auto monkey_mesh = monkey_loader.to_mesh();
+    monkey_mesh.set_shader(cube_shader);
+    DrawCall monkey_draw_call(0, static_cast<i32>(monkey_mesh.get_num_vertices()), DrawCall::PolygonMode::Fill);
+    monkey_mesh.set_draw_call(monkey_draw_call);
+    auto monkey_trans = std::make_shared<Transform>();
+    monkey_trans->set_scale(glm::vec3(0.2f));
+    monkey_trans->set_translation(glm::vec3(0.0f, 0.2f, 0.0f));
+    auto monkey_model = std::make_shared<SceneModel>("monkey", monkey_trans, monkey_mesh);
+    scene->add_node(monkey_model);
+
+    ModelLoader cube_loader("/Users/philiptoftenielsen/dev/cppsim/model/cube.obj");
     auto cube_mesh = cube_loader.to_mesh();
-    cube_mesh.set_shader(cube_shader);
-    DrawCall cube_draw_call(0, static_cast<i32>(cube_mesh.get_num_vertices()), DrawCall::PolygonMode::Lines);
+    cube_mesh.set_shader(plane_shader);
+    cube_mesh.set_texture(plane_tex);
+    DrawCall cube_draw_call(0, static_cast<i32>(cube_mesh.get_num_vertices()), DrawCall::PolygonMode::Fill);
     cube_mesh.set_draw_call(cube_draw_call);
     auto trans_ptr = std::make_shared<Transform>();
-    trans_ptr->set_scale(glm::vec3(0.2f));
-    trans_ptr->set_translation(glm::vec3(0.0f, 0.2f, 0.0f));
+    trans_ptr->set_scale(glm::vec3(0.1f));
+    trans_ptr->set_translation(glm::vec3(1.0f));
     auto cube_model = std::make_shared<SceneModel>("cube", trans_ptr, cube_mesh);
-
-
-    std::shared_ptr<Camera> camera = std::make_shared<Camera>();
-    camera->set_view_matrix(glm::vec3(-1.0f, 0.5f, -2.0f), glm::vec3(0));
-    camera->set_perspective_projection(glm::radians(45.0f), window->aspect_ratio(), 0.1f, 100.0f);
-    std::shared_ptr<SceneCamera> scene_camera = std::make_shared<SceneCamera>("cam 1", camera);
-    cam_controller = CameraController(scene_camera);
-
-    scene = std::make_unique<Scene>(scene_camera);
-    scene->add_node(plane_model);
     scene->add_node(cube_model);
+
+
+    scene->add_node(plane_model);
+
 }
 
 void Application::init_renderer()
 {
-    renderer = make_unique<Renderer>(scene->get_scene_graph(), scene->get_scene_camera()->get_camera());
     renderer->add_render_pass(std::make_unique<ForwardPass>());
 
+    auto point_light = std::make_unique<PointLight>(glm::vec3(1.0f), glm::vec3(1.0f));
+    renderer->add_light(std::move(point_light));
 }
 
 void Application::run()
@@ -94,7 +125,6 @@ void Application::render(float /*dt*/)
 {
     Device::clear(true, glm::vec3(0.1f, 0.1f, 0.1f), true, false, 0);
     renderer->render();
-
 }
 
 void Application::loop()
@@ -108,7 +138,6 @@ void Application::loop()
         cam_controller.update(*window, dt);
 
         render(dt);
-        CPPSIM_TRACE(dt);
 
         window->swap_buffers();
         Device::poll_events();

@@ -21,7 +21,11 @@ class Camera
 
     void set_perspective_projection(float fov, float aspect, float near, float far);
 
-    inline glm::mat4 project_view_matrix() { return proj_matrix * view_matrix; }
+    [[nodiscard]] inline glm::mat4 project_view_matrix() { return proj_matrix * view_matrix; }
+    [[nodiscard]] inline glm::mat4 get_project_matrix() { return proj_matrix; }
+    [[nodiscard]] inline glm::mat4 get_view_matrix() { return view_matrix; }
+
+
 
     void basis_vectors(glm::vec3& right, glm::vec3& up, glm::vec3& forward) const;
 

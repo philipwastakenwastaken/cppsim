@@ -32,6 +32,7 @@ class Shader
 
     void set_uniform1i(const std::string& name, int v1);
     void set_uniform4f(const std::string& name, float v0, float v1, float v2, float v3);
+    void set_uniform3fv(const std::string& name, const glm::vec3& v);
     void set_uniform_mat4f(const std::string& name, const glm::mat4& matrix);
 
     [[nodiscard]] const std::string& get_file_path() const { return file_path; }

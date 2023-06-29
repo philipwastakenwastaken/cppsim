@@ -1,5 +1,6 @@
 #include <glad/gl.h>
 
+#include "core/log.hpp"
 #include "gl_shader.hpp"
 
 #include <iostream>
@@ -19,6 +20,11 @@ void Shader::set_uniform1i(const std::string& name, int v1) { glUniform1i(get_un
 void Shader::set_uniform4f(const std::string& name, float v0, float v1, float v2, float v3)
 {
     glUniform4f(get_uniform_location(name), v0, v1, v2, v3);
+}
+
+void Shader::set_uniform3fv(const std::string& name, const glm::vec3& v)
+{
+    glUniform3f(get_uniform_location(name), v.x, v.y, v.z);
 }
 
 void Shader::set_uniform_mat4f(const std::string& name, const glm::mat4& matrix)

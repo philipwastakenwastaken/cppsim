@@ -20,6 +20,7 @@ Checks:          '*,-fuchsia-*,-google-*,-zircon-*,-abseil-*,-modernize-use-trai
                   -misc-no-recursion,
                   -cppcoreguidelines-prefer-member-initializer,
                   -cert-err58-cpp,
+                  -modernize-avoid-bind,
                   -cert-msc51-cpp,
                   -readability-convert-member-functions-to-static,
                   -altera-id-dependent-backward-branch,

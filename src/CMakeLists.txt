@@ -20,6 +20,7 @@ add_library(cppsimlib STATIC render/window.cpp
                            render/renderer/forward_pass.cpp
                            render/asset/model_loader.cpp
                            render/asset/texture_loader.cpp
+                           render/shaders/shader_updates.cpp
                            render/camera/camera.cpp
                            render/camera/camera_controller.cpp
                            render/scene/transform.cpp
