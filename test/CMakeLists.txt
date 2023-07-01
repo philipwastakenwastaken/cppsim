@@ -1,4 +1,5 @@
 add_executable(tests gtest_main.cpp
+                     gtest_ring_buffer.cpp
                      gtest_util.cpp)
 
 target_link_libraries(tests gtest)

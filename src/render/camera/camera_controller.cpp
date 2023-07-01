@@ -12,18 +12,30 @@ CameraController::CameraController(std::shared_ptr<SceneCamera> c)
 {}
 
 
-void CameraController::update(const Window& window, float dt)
+void CameraController::update(Window& window, float dt)
 {
+    bool enable_pressed = window.is_key_pressed(GLFW_KEY_G);
+    if (enable_pressed && !m_enable_pressed)
+    {
+        enabled = !enabled;
+        window.set_mouse_visible(!enabled);
+        mouse_pos = window.mouse_position(true);
+    }
+    m_enable_pressed = enable_pressed;
+
+
     if (first_update)
     {
         mouse_pos = window.mouse_position(true);
         first_update = false;
     }
 
-    update_translation(window, dt);
-    update_rotation(window, dt);
-
-    camera->match_camera_to_transform();
+    if (enabled)
+    {
+        update_translation(window, dt);
+        update_rotation(window, dt);
+        camera->match_camera_to_transform();
+    }
 }
 
 void CameraController::update_translation(const Window& window, float dt)

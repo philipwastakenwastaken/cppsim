@@ -28,6 +28,7 @@ add_library(cppsimlib STATIC render/window.cpp
                            render/opengl/gl_shader.cpp
                            application.cpp
                            util/timer.cpp
+                           util/frame_timer.cpp
                            util/rng.cpp
                            core/log.cpp)
 
@@ -42,6 +43,7 @@ target_link_libraries(cppsimlib PUBLIC
                               glad
                               glm
                               stb
+                              imgui
                               spdlog::spdlog)
 
 # Prefer pthreads on Unix.

@@ -6,6 +6,7 @@
 #include "render/window.hpp"
 #include "render/renderer/renderer.hpp"
 #include "render/scene/scene.hpp"
+#include "util/frame_timer.hpp"
 
 #include <memory>
 
@@ -28,6 +29,8 @@ class Application
       CameraController cam_controller;
       std::unique_ptr<Scene> scene;
       std::unique_ptr<Renderer> renderer;
+
+      FrameTimer frame_timer;
 };
 
 

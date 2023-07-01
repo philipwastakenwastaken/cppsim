@@ -17,7 +17,7 @@ class CameraController {
         explicit CameraController(std::shared_ptr<SceneCamera> c);
 
 
-        void update(const Window& window, float dt);
+        void update(Window& window, float dt);
 
 
     private:
@@ -32,6 +32,8 @@ class CameraController {
         float rotation_speed;
 
         bool first_update = true;
+        bool enabled = false;
+        bool m_enable_pressed = false;
 
 
 

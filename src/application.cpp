@@ -1,3 +1,7 @@
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
+
 #include "application.hpp"
 #include "glm/ext/vector_float3.hpp"
 #include "render/asset/model_loader.hpp"
@@ -10,8 +14,9 @@
 #include "render/scene/transform.hpp"
 #include "render/shaders/shader_updates.hpp"
 
-#include "util/timer.hpp"
+#include "util/frame_timer.hpp"
 
+#include <algorithm>
 #include <memory>
 #include <type_traits>
 #include <functional>
@@ -24,6 +29,13 @@ Application::Application()
     Device::init();
     window = new Window(WindowWidth, WindowHeight);
     Device::set_current_window(*window);
+
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void) io;
+    ImGui::StyleColorsDark();
+    ImGui_ImplGlfw_InitForOpenGL(window->get_window(), true);
+    ImGui_ImplOpenGL3_Init("#version 330");
 }
 
 
@@ -105,9 +117,9 @@ void Application::init_renderer()
 
 void Application::run()
 {
-    window->set_mouse_visible(false);
+    window->set_mouse_visible(true);
     Device::enable_feature(GL_DEPTH_TEST);
-    Device::set_vsync(true);
+    Device::set_vsync(false);
 
 
     init_scene();
@@ -116,6 +128,9 @@ void Application::run()
 
     loop();
 
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
 
     window->terminate();
     Device::terminate();
@@ -124,27 +139,37 @@ void Application::run()
 void Application::render(float /*dt*/)
 {
     Device::clear(true, glm::vec3(0.1f, 0.1f, 0.1f), true, false, 0);
+
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+
     renderer->render();
+
+    ImGui::Begin("Diagnostics");
+    ImGui::Text("FPS: %d", static_cast<i32>(frame_timer.fps()));
+    ImGui::PlotLines("Frame Time", frame_timer.lin().data(), static_cast<i32>(frame_timer.size()));
+    ImGui::End();
+
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
 void Application::loop()
 {
-    Timer frame_timer;
-    float dt = 0.01667f;
 
     while (!window->should_close())
     {
-        frame_timer.start();
-        cam_controller.update(*window, dt);
+        frame_timer.update();
 
-        render(dt);
-
-        window->swap_buffers();
         Device::poll_events();
-        Device::process_errors();
+        cam_controller.update(*window, frame_timer.delta_time());
 
-        frame_timer.stop();
-        dt = frame_timer.elapsed<Nano>() / 1000000000.0f;
+        render(frame_timer.delta_time());
+
+        Device::process_errors();
+        window->swap_buffers();
+
     }
 }
 
